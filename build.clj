@@ -18,6 +18,11 @@
 (defn- notebooks* []
   (let [config (load-clay-config)]
     (clay/make! config)
+    ;; Copy notebooks.index.html to index.html for GitHub Pages root
+    (let [src (io/file "docs" "notebooks.index.html")
+          dest (io/file "docs" "index.html")]
+      (when (.exists src)
+        (io/copy src dest)))
     (shutdown-agents)))
 
 (defn notebooks
