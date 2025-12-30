@@ -37,7 +37,7 @@ jobs:
             ${{ runner.os }}-clojure-
 
       - name: Build notebooks
-        run: clj -T:build notebooks
+        run: clojure -T:build notebooks
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
