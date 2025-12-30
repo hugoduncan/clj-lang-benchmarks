@@ -25,6 +25,7 @@
                                       (range 9)))
                         :x 9))
 (def test-record (->Point 1 2 3))
+(def test-record-ext (assoc test-record :w 4))
 
 ;; ## Array Map Access (3 keys)
 ;;
@@ -76,6 +77,22 @@
    :destructuring     (record-destructure test-record)
    :get-with-default  (get test-record :x 0)
    :field-access      (.x ^Point test-record)})
+ :domain-plan domain-plans/implementation-comparison)
+
+;; ## Record Extension Map Access
+;;
+;; Accessing keys not defined in the record (stored in __extmap).
+
+(defn record-ext-destructure [r]
+  (let [{:keys [w]} r] w))
+
+(domain/bench
+ (domain/domain-expr
+  [_ [1]]
+  {:keyword-access    (:w test-record-ext)
+   :get               (get test-record-ext :w)
+   :destructuring     (record-ext-destructure test-record-ext)
+   :get-with-default  (get test-record-ext :w 0)})
  :domain-plan domain-plans/implementation-comparison)
 
 ;; ## Analysis
