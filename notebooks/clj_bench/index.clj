@@ -1,4 +1,4 @@
-(ns notebooks.index
+(ns clj-bench.index
   {:clay {:title "Clojure Language Benchmarks"}}
   (:require [scicloj.kindly.v4.kind :as kind]))
 
