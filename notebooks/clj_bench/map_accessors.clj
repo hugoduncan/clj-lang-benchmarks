@@ -36,14 +36,14 @@
 
 (domain/bench
  (domain/domain-expr
-  [_ [1]]
-  {:get                    (get array-map-3 :x)
-   :get-with-default       (get array-map-3 :x 0)
-   :keyword-access         (:x array-map-3)
-   :keyword-with-default   (:x array-map-3 0)
-   :map-as-fn              (array-map-3 :x)
-   :map-as-fn-with-default (array-map-3 :x 0)
-   :destructuring          (map-destructure array-map-3)})
+  [test-map [array-map-3]]
+  {:get                    (get test-map :x)
+   :get-with-default       (get test-map :x 0)
+   :keyword-access         (:x test-map)
+   :keyword-with-default   (:x test-map 0)
+   :map-as-fn              (test-map :x)
+   :map-as-fn-with-default (test-map :x 0)
+   :destructuring          (map-destructure test-map)})
  :domain-plan domain-plans/implementation-comparison)
 
 ;; ## Hash Map Access (10 keys)
@@ -52,14 +52,14 @@
 
 (domain/bench
  (domain/domain-expr
-  [_ [1]]
-  {:get                    (get hash-map-10 :x)
-   :get-with-default       (get hash-map-10 :x 0)
-   :keyword-access         (:x hash-map-10)
-   :keyword-with-default   (:x hash-map-10 0)
-   :map-as-fn              (hash-map-10 :x)
-   :map-as-fn-with-default (hash-map-10 :x 0)
-   :destructuring          (map-destructure hash-map-10)})
+  [test-map [hash-map-10]]
+  {:get                    (get test-map :x)
+   :get-with-default       (get test-map :x 0)
+   :keyword-access         (:x test-map)
+   :keyword-with-default   (:x test-map 0)
+   :map-as-fn              (test-map :x)
+   :map-as-fn-with-default (test-map :x 0)
+   :destructuring          (map-destructure test-map)})
  :domain-plan domain-plans/implementation-comparison)
 
 ;; ## Record Access Patterns
@@ -71,12 +71,12 @@
 
 (domain/bench
  (domain/domain-expr
-  [_ [1]]
-  {:keyword-access    (:x test-record)
-   :get               (get test-record :x)
-   :destructuring     (record-destructure test-record)
-   :get-with-default  (get test-record :x 0)
-   :field-access      (.x ^Point test-record)})
+  [test-rec [test-record]]
+  {:keyword-access    (:x test-rec)
+   :get               (get test-rec :x)
+   :destructuring     (record-destructure test-rec)
+   :get-with-default  (get test-rec :x 0)
+   :field-access      (.x ^Point test-rec)})
  :domain-plan domain-plans/implementation-comparison)
 
 ;; ## Record Extension Map Access
@@ -88,11 +88,11 @@
 
 (domain/bench
  (domain/domain-expr
-  [_ [1]]
-  {:keyword-access    (:w test-record-ext)
-   :get               (get test-record-ext :w)
-   :destructuring     (record-ext-destructure test-record-ext)
-   :get-with-default  (get test-record-ext :w 0)})
+  [test-rec [test-record-ext]]
+  {:keyword-access    (:w test-rec)
+   :get               (get test-rec :w)
+   :destructuring     (record-ext-destructure test-rec)
+   :get-with-default  (get test-rec :w 0)})
  :domain-plan domain-plans/implementation-comparison)
 
 ;; ## Analysis
