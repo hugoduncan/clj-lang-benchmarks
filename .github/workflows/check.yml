@@ -1,0 +1,54 @@
+name: Check
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Setup Clojure
+        uses: DeLaGuardo/setup-clojure@12.5
+        with:
+          cli: latest
+
+      - name: Cache Clojure deps
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.m2/repository
+            ~/.gitlibs
+            .cpcache
+          key: ${{ runner.os }}-clojure-${{ hashFiles('deps.edn') }}
+          restore-keys: |
+            ${{ runner.os }}-clojure-
+
+      - name: Check formatting
+        run: |
+          paths=()
+          for p in src dev notebooks build.clj; do
+            [ -e "$p" ] && paths+=("$p")
+          done
+          cljfmt check "${paths[@]}"
+
+      - name: Lint
+        run: |
+          paths=()
+          for p in src dev notebooks build.clj; do
+            [ -e "$p" ] && paths+=("$p")
+          done
+          clj-kondo --lint "${paths[@]}"
+
+      - name: Build notebooks
+        run: clj -T:build notebooks

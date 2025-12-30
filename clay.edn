@@ -1,0 +1,8 @@
+{:base-target-path "docs"
+ :clean-up-target-dir true
+ :hide-info-line true
+ :show false
+ :live-reload false
+ :watching-new-files false
+ :base-url "/clj-lang-benchmarks/"
+ :title "Clojure Language Benchmarks"}
