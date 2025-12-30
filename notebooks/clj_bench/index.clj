@@ -13,7 +13,8 @@
 
 (kind/hiccup
  [:ul
-  [:li [:em "No benchmarks yet - check back soon!"]]])
+  [:li [:a {:href "clj_bench.map_accessors.html"} "Map Accessor Benchmarks"]
+   " - Comparing map and record access patterns"]])
 
 ;; ## Running Benchmarks
 ;;
