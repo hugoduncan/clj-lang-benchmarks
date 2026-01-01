@@ -29,14 +29,31 @@
 (defn record-ext-destructure [r]
   (let [{:keys [w]} r] w))
 
-;; ## Array Map Access (3 keys)
+;; ## Array Map Access (3 keys - best case)
 ;;
-;; PersistentArrayMap uses linear scan - fast for small maps.
+;; PersistentArrayMap uses linear scan. Accessing the first key is best case.
 
 (let [array-map-3 {:x 1 :y 2 :z 3}]
   (domain/bench
    (domain/domain-expr
     [test-map [array-map-3]]
+    {:get                    (get test-map :x)
+     :get-with-default       (get test-map :x 0)
+     :keyword-access         (:x test-map)
+     :keyword-with-default   (:x test-map 0)
+     :map-as-fn              (test-map :x)
+     :map-as-fn-with-default (test-map :x 0)
+     :destructuring          (map-destructure test-map)})
+   :domain-plan domain-plans/implementation-comparison))
+
+;; ## Array Map Access (8 keys - worst case)
+;;
+;; Accessing the last key in an 8-key array-map shows worst-case linear scan.
+
+(let [array-map-8 {:a 1 :b 2 :c 3 :d 4 :e 5 :f 6 :g 7 :x 8}]
+  (domain/bench
+   (domain/domain-expr
+    [test-map [array-map-8]]
     {:get                    (get test-map :x)
      :get-with-default       (get test-map :x 0)
      :keyword-access         (:x test-map)
