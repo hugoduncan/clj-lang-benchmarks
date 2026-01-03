@@ -132,6 +132,20 @@
      :get-with-default (get m :missing-key :default)})
    :domain-plan domain-plans/implementation-comparison))
 
+;; ## Record Missing Key Access
+;;
+;; Accessing a key that doesn't exist in the record (not a defined field,
+;; and not in __extmap).
+
+(let [test-record (->Point 1 2 3)]
+  (domain/bench
+   (domain/domain-expr
+    [r [test-record]]
+    {:keyword-access   (:missing-key r)
+     :get              (get r :missing-key)
+     :get-with-default (get r :missing-key :default)})
+   :domain-plan domain-plans/implementation-comparison))
+
 ;; ## Analysis
 ;;
 ;; Key observations:
