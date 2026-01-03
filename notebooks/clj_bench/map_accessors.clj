@@ -37,7 +37,8 @@
   (domain/bench
    (domain/domain-expr
     [test-map [array-map-3]]
-    {:get                    (get test-map :x)
+    {:native                 (.valAt ^clojure.lang.ILookup test-map :x)
+     :get                    (get test-map :x)
      :get-with-default       (get test-map :x 0)
      :keyword-access         (:x test-map)
      :keyword-with-default   (:x test-map 0)
@@ -54,7 +55,8 @@
   (domain/bench
    (domain/domain-expr
     [test-map [array-map-8]]
-    {:get                    (get test-map :x)
+    {:native                 (.valAt ^clojure.lang.ILookup test-map :x)
+     :get                    (get test-map :x)
      :get-with-default       (get test-map :x 0)
      :keyword-access         (:x test-map)
      :keyword-with-default   (:x test-map 0)
@@ -73,7 +75,8 @@
   (domain/bench
    (domain/domain-expr
     [test-map [hash-map-10]]
-    {:get                    (get test-map :x)
+    {:native                 (.valAt ^clojure.lang.ILookup test-map :x)
+     :get                    (get test-map :x)
      :get-with-default       (get test-map :x 0)
      :keyword-access         (:x test-map)
      :keyword-with-default   (:x test-map 0)
@@ -90,11 +93,13 @@
   (domain/bench
    (domain/domain-expr
     [test-rec [test-record]]
-    {:keyword-access    (:x test-rec)
-     :get               (get test-rec :x)
-     :destructuring     (record-destructure test-rec)
-     :get-with-default  (get test-rec :x 0)
-     :field-access      (.x ^Point test-rec)})
+    {:native               (.valAt ^clojure.lang.ILookup test-rec :x)
+     :keyword-access       (:x test-rec)
+     :keyword-with-default (:x test-rec 0)
+     :get                  (get test-rec :x)
+     :get-with-default     (get test-rec :x 0)
+     :destructuring        (record-destructure test-rec)
+     :field-access         (.x ^Point test-rec)})
    :domain-plan domain-plans/implementation-comparison))
 
 ;; ## Record Extension Map Access
@@ -105,10 +110,12 @@
   (domain/bench
    (domain/domain-expr
     [test-rec [test-record-ext]]
-    {:keyword-access    (:w test-rec)
-     :get               (get test-rec :w)
-     :destructuring     (record-ext-destructure test-rec)
-     :get-with-default  (get test-rec :w 0)})
+    {:native               (.valAt ^clojure.lang.ILookup test-rec :w)
+     :keyword-access       (:w test-rec)
+     :keyword-with-default (:w test-rec 0)
+     :get                  (get test-rec :w)
+     :get-with-default     (get test-rec :w 0)
+     :destructuring        (record-ext-destructure test-rec)})
    :domain-plan domain-plans/implementation-comparison))
 
 ;; ## Analysis
