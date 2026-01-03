@@ -37,7 +37,7 @@
   (domain/bench
    (domain/domain-expr
     [test-map [array-map-3]]
-    {:native                 (.valAt ^clojure.lang.ILookup test-map :x)
+    {:valAt                 (.valAt ^clojure.lang.ILookup test-map :x)
      :get                    (get test-map :x)
      :get-with-default       (get test-map :x 0)
      :keyword-access         (:x test-map)
@@ -55,7 +55,7 @@
   (domain/bench
    (domain/domain-expr
     [test-map [array-map-8]]
-    {:native                 (.valAt ^clojure.lang.ILookup test-map :x)
+    {:valAt                 (.valAt ^clojure.lang.ILookup test-map :x)
      :get                    (get test-map :x)
      :get-with-default       (get test-map :x 0)
      :keyword-access         (:x test-map)
@@ -75,7 +75,7 @@
   (domain/bench
    (domain/domain-expr
     [test-map [hash-map-10]]
-    {:native                 (.valAt ^clojure.lang.ILookup test-map :x)
+    {:valAt                 (.valAt ^clojure.lang.ILookup test-map :x)
      :get                    (get test-map :x)
      :get-with-default       (get test-map :x 0)
      :keyword-access         (:x test-map)
@@ -93,7 +93,7 @@
   (domain/bench
    (domain/domain-expr
     [test-rec [test-record]]
-    {:native               (.valAt ^clojure.lang.ILookup test-rec :x)
+    {:valAt               (.valAt ^clojure.lang.ILookup test-rec :x)
      :keyword-access       (:x test-rec)
      :keyword-with-default (:x test-rec 0)
      :get                  (get test-rec :x)
@@ -110,7 +110,7 @@
   (domain/bench
    (domain/domain-expr
     [test-rec [test-record-ext]]
-    {:native               (.valAt ^clojure.lang.ILookup test-rec :w)
+    {:valAt               (.valAt ^clojure.lang.ILookup test-rec :w)
      :keyword-access       (:w test-rec)
      :keyword-with-default (:w test-rec 0)
      :get                  (get test-rec :w)
