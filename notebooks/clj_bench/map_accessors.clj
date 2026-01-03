@@ -118,6 +118,20 @@
      :destructuring        (record-ext-destructure test-rec)})
    :domain-plan domain-plans/implementation-comparison))
 
+;; ## Missing Key Access
+;;
+;; Accessing a key that doesn't exist in the map. Shows the overhead of
+;; default value handling vs nil return.
+
+(let [test-map {:x 1 :y 2 :z 3}]
+  (domain/bench
+   (domain/domain-expr
+    [m [test-map]]
+    {:keyword-access   (:missing-key m)
+     :get              (get m :missing-key)
+     :get-with-default (get m :missing-key :default)})
+   :domain-plan domain-plans/implementation-comparison))
+
 ;; ## Analysis
 ;;
 ;; Key observations:
@@ -126,6 +140,7 @@
 ;; - **Records**: Direct field access `(.x r)` is fastest due to direct JVM field read
 ;; - Destructuring has overhead from creating intermediate bindings
 ;; - `get` with default adds a nil check compared to plain `get`
+;; - Missing key access has similar performance to existing key access
 
 (kind/hidden
  (bench/set-default-viewer! :print))
