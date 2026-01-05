@@ -50,5 +50,8 @@ jobs:
           done
           clj-kondo --lint "${paths[@]}"
 
+      - name: Prepare deps
+        run: clj -X:deps prep
+
       - name: Build notebooks
         run: clj -T:build notebooks

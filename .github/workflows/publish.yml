@@ -36,6 +36,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-clojure-
 
+      - name: Prepare deps
+        run: clj -X:deps prep
+
       - name: Build notebooks
         run: clj -T:build notebooks
 
