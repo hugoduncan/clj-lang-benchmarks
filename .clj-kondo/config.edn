@@ -2,4 +2,5 @@
            :unused-binding {:level :warning}
            :unused-private-var {:level :warning}
            :redundant-do {:level :warning}
-           :redundant-let {:level :warning}}}
+           :redundant-let {:level :warning}}
+ :lint-as {criterium.domain/domain-expr clojure.core/for}}
