@@ -146,15 +146,5 @@
      :get-with-default (get r :missing-key :default)})
    :domain-plan domain-plans/implementation-comparison))
 
-;; ## Analysis
-;;
-;; Key observations:
-;;
-;; - **Maps**: Keyword-first `(:x m)` is idiomatic and well-optimized
-;; - **Records**: Direct field access `(.x r)` is fastest due to direct JVM field read
-;; - Destructuring has overhead from creating intermediate bindings
-;; - `get` with default adds a nil check compared to plain `get`
-;; - Missing key access has similar performance to existing key access
-
 (kind/hidden
  (bench/set-default-viewer! :print))
