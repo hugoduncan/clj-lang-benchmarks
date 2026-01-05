@@ -42,10 +42,11 @@ Example structure:
 
 ## Clay Notebook Conventions
 
-- Notebooks live in `notebooks/`
+- Notebooks live in `notebooks/` with single-segment namespaces (e.g., `index`, `map-accessors`)
 - Index notebook (`notebooks/index.clj`) links to all benchmarks
 - Build with `clj -T:build notebooks`
-- Output goes to `docs/` for GitHub Pages
+- Output goes to `docs/` for GitHub Pages (gitignored)
+- Publishing deploys to `gh-pages` branch via GitHub Actions or `clj -T:build publish`
 
 ## Code Quality
 

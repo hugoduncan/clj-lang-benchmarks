@@ -1,29 +1,15 @@
 (ns build
-  (:require [clojure.edn :as edn]
-            [clojure.java.io :as io]
-            [clojure.tools.build.api :as b]
-            [scicloj.clay.v2.api :as clay]))
-
-(defn- notebook-files []
-  (->> (io/file "notebooks")
-       file-seq
-       (filter #(.isFile %))
-       (filter #(.endsWith (.getName %) ".clj"))
-       (mapv #(.getPath %))))
+  (:require
+   [clojure.edn :as edn]
+   [clojure.tools.build.api :as b]
+   [scicloj.clay.v2.api :as clay]))
 
 (defn- load-clay-config []
-  (-> (edn/read-string (slurp "clay.edn"))
-      (assoc :source-path (notebook-files))))
+  (edn/read-string (slurp "clay.edn")))
 
 (defn- notebooks* []
-  (let [config (load-clay-config)]
-    (clay/make! config)
-    ;; Copy notebooks.index.html to index.html for GitHub Pages root
-    (let [src (io/file "docs" "notebooks.index.html")
-          dest (io/file "docs" "index.html")]
-      (when (.exists src)
-        (io/copy src dest)))
-    (shutdown-agents)))
+  (clay/make! (load-clay-config))
+  (shutdown-agents))
 
 (defn notebooks
   "Build Clay notebooks to docs/."
@@ -40,11 +26,18 @@
                       {:command-args command-args :exit exit})))))
 
 (defn publish
-  "Publish docs/ to GitHub Pages (manual).
-   Builds notebooks and commits docs/ for GitHub Pages.
-   Assumes GitHub Pages is configured to serve from docs/ on main branch."
+  "Publish docs/ to gh-pages branch.
+   Builds notebooks and pushes docs/ content to gh-pages branch."
   [_]
   (notebooks*)
-  (run-process! ["git" "add" "docs"])
-  (run-process! ["git" "commit" "-m" "Publish notebooks"])
-  (println "Committed docs/. Push to publish via GitHub Pages."))
+  ;; Add .nojekyll to prevent GitHub from processing with Jekyll
+  (spit "docs/.nojekyll" "")
+  ;; Use git subtree to push docs/ to gh-pages branch
+  (run-process! ["git" "add" "-f" "docs"])
+  (run-process! ["git" "commit" "-m" "Build notebooks for publishing"])
+  (run-process! ["git" "subtree" "split" "--prefix" "docs" "-b" "gh-pages-temp"])
+  (run-process! ["git" "push" "-f" "origin" "gh-pages-temp:gh-pages"])
+  (run-process! ["git" "branch" "-D" "gh-pages-temp"])
+  ;; Clean up: reset the commit we made for subtree
+  (run-process! ["git" "reset" "--soft" "HEAD~1"])
+  (println "Published to gh-pages branch."))

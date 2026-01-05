@@ -38,15 +38,23 @@ clj -T:build notebooks
 
 ## Publishing
 
-The `publish` task builds notebooks and commits the `docs/` directory:
+There are two publishing methods, both deploying to the `gh-pages` branch:
+
+### Automatic (GitHub Actions)
+
+Pushing to `master` triggers the GitHub Actions workflow which builds
+notebooks and deploys to GitHub Pages automatically.
+
+### Manual
+
+The `publish` task builds notebooks locally and pushes to `gh-pages`:
 
 ```bash
 clj -T:build publish
 ```
 
-Push to publish via GitHub Pages.
-
-GitHub Actions automatically publish notebooks on push to master.
+This uses git subtree to push `docs/` content to the `gh-pages` branch
+without committing to `master`.
 
 ## Viewing Results
 
