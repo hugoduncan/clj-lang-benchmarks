@@ -1,4 +1,4 @@
-(ns clj-bench.index
+(ns index
   {:clay {:title "Clojure Language Benchmarks"}}
   (:require [scicloj.kindly.v4.kind :as kind]))
 
@@ -13,7 +13,7 @@
 
 (kind/hiccup
  [:ul
-  [:li [:a {:href "clj_bench.map_accessors.html"} "Map Accessor Benchmarks"]
+  [:li [:a {:href "map_accessors.html"} "Map Accessor Benchmarks"]
    " - Comparing map and record access patterns"]])
 
 ;; ## Running Benchmarks

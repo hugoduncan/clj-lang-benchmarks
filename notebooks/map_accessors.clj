@@ -1,4 +1,4 @@
-(ns clj-bench.map-accessors
+(ns map-accessors
   {:clay {:title "Map Accessor Benchmarks"}}
   (:require
    [criterium.bench :as bench]
