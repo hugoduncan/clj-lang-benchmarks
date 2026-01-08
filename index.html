@@ -55,7 +55,9 @@
   (:require [scicloj.kindly.v4.kind :as kind]))</code></pre></div></div><div style="margin:15px;"><div><h1 id="clojure-language-benchmarks">Clojure Language Benchmarks</h1><p>This project benchmarks Clojure implementations using criterium, with results published as Clay notebooks.</p><h2 id="benchmarks">Benchmarks</h2><p>Benchmark notebooks will be added here as they are created.</p></div></div><div style="margin:15px;"><div><pre><code class="sourceCode language-clojure source-clojure bg-light">(kind/hiccup
  [:ul
   [:li [:a {:href &quot;map_accessors.html&quot;} &quot;Map Accessor Benchmarks&quot;]
-   &quot; - Comparing map and record access patterns&quot;]])</code></pre></div></div><div style="margin:15px;"><ul><li><a href="map_accessors.html">Map Accessor Benchmarks</a> - Comparing map and record access patterns</li></ul></div><div style="margin:15px;"><div><h2 id="running-benchmarks">Running Benchmarks</h2><p>To run benchmarks locally:</p><pre class="viewer-code not-prose">clj -M:dev
+   &quot; - Comparing map and record access patterns&quot;]
+  [:li [:a {:href &quot;not_empty.html&quot;} &quot;Not-Empty Predicate Benchmarks&quot;]
+   &quot; - Comparing (seq x) vs (not (empty? x)) across collection types&quot;]])</code></pre></div></div><div style="margin:15px;"><ul><li><a href="map_accessors.html">Map Accessor Benchmarks</a> - Comparing map and record access patterns</li><li><a href="not_empty.html">Not-Empty Predicate Benchmarks</a> - Comparing (seq x) vs (not (empty? x)) across collection types</li></ul></div><div style="margin:15px;"><div><h2 id="running-benchmarks">Running Benchmarks</h2><p>To run benchmarks locally:</p><pre class="viewer-code not-prose">clj -M:dev
 </pre><p>Then evaluate the benchmark namespace in your REPL.</p><h2 id="building-notebooks">Building Notebooks</h2><pre class="viewer-code not-prose">clj -T:build notebooks
 </pre><p>Output is written to <code>docs/</code> for GitHub Pages.</p></div></div></div></div></div></div></div><script type="text/javascript">/*!
   Highlight.js v11.9.0 (git: b7ec4bfafc)
