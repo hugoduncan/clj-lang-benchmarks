@@ -14,7 +14,9 @@
 (kind/hiccup
  [:ul
   [:li [:a {:href "map_accessors.html"} "Map Accessor Benchmarks"]
-   " - Comparing map and record access patterns"]])
+   " - Comparing map and record access patterns"]
+  [:li [:a {:href "not_empty.html"} "Not-Empty Predicate Benchmarks"]
+   " - Comparing (seq x) vs (not (empty? x)) across collection types"]])
 
 ;; ## Running Benchmarks
 ;;
