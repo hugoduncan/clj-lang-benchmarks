@@ -1,4 +1,6 @@
-{:linters {:unused-namespace {:level :warning}
+{:config-in-ns {clj-bench.not-empty
+                {:linters {:not-empty? {:level :off}}}}
+ :linters {:unused-namespace {:level :warning}
            :unused-binding {:level :warning}
            :unused-private-var {:level :warning}
            :redundant-do {:level :warning}
