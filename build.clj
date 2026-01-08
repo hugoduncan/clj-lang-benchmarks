@@ -4,8 +4,22 @@
    [clojure.tools.build.api :as b]
    [scicloj.clay.v2.api :as clay]))
 
-(defn- load-clay-config []
-  (edn/read-string (slurp "clay.edn")))
+(defn- notebook-files
+  "Discover all .clj files in the notebooks directory."
+  []
+  (->> (java.io.File. "notebooks")
+       .listFiles
+       (filter #(.isFile %))
+       (map #(.getName %))
+       (filter #(.endsWith % ".clj"))
+       sort
+       vec))
+
+(defn- load-clay-config
+  "Load clay.edn and override :source-path with discovered notebooks."
+  []
+  (-> (edn/read-string (slurp "clay.edn"))
+      (assoc :source-path (notebook-files))))
 
 (defn- notebooks* []
   (clay/make! (load-clay-config))
