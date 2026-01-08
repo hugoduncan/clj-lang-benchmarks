@@ -1,4 +1,4 @@
-{:config-in-ns {clj-bench.not-empty
+{:config-in-ns {not-empty
                 {:linters {:not-empty? {:level :off}}}}
  :linters {:unused-namespace {:level :warning}
            :unused-binding {:level :warning}

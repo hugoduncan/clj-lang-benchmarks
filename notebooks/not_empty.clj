@@ -1,19 +1,25 @@
-(ns clj-bench.not-empty
+(ns not-empty
   {:clay {:title "Not-Empty Predicate Benchmarks"}}
   (:require
    [criterium.bench :as bench]
    [criterium.domain :as domain]
    [criterium.domain-plans :as domain-plans]
+   [criterium.jvm :as jvm]
    [scicloj.kindly.v4.kind :as kind]))
 
 (kind/hidden
  (bench/set-default-viewer! :kindly))
 
 ;; # Not-Empty Predicate Benchmarks
-;;
+
+;; ## Environment
+
+*clojure-version*
+
+(jvm/os-details)
+
 ;; Comparing performance of different approaches to check if a collection is
 ;; not empty.
-;;
 ;; Two common approaches:
 ;; - `(seq x)` - idiomatic Clojure, returns nil or first element as truthy value
 ;; - `(not (empty? x))` - explicit boolean check
@@ -142,13 +148,6 @@
 ;; **`(not (empty? x))`**:
 ;; - Returns a boolean
 ;; - Two function calls: `empty?` then `not`
-;; - `empty?` internally calls `seq` and checks for nil
-;;
-;; Since `empty?` is implemented as `(not (seq coll))`, using `(not (empty? x))`
-;; is equivalent to `(not (not (seq x)))` - an unnecessary double negation.
-;;
-;; **Recommendation**: Use `(seq x)` for checking if a collection is not empty.
-;; It is both idiomatic and avoids the overhead of double negation.
 
 (kind/hidden
  (bench/set-default-viewer! :print))
