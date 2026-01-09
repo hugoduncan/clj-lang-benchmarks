@@ -1,5 +1,4 @@
 {:base-source-path "notebooks"
- :source-path ["index.clj" "map_accessors.clj"]
  :base-target-path "docs"
  :clean-up-target-dir true
  :hide-info-line true

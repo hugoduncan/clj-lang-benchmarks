@@ -1,6 +1,10 @@
 (ns index
   {:clay {:title "Clojure Language Benchmarks"}}
-  (:require [scicloj.kindly.v4.kind :as kind]))
+  (:require
+   [clojure.edn :as edn]
+   [clojure.java.io :as io]
+   [clojure.string :as str]
+   [scicloj.kindly.v4.kind :as kind]))
 
 ;; # Clojure Language Benchmarks
 ;;
@@ -8,15 +12,50 @@
 ;; with results published as Clay notebooks.
 
 ;; ## Benchmarks
-;;
-;; Benchmark notebooks will be added here as they are created.
+
+(defn- notebook-files
+  "Returns .clj files in notebooks/ excluding index.clj."
+  []
+  (->> (io/file "notebooks")
+       (.listFiles)
+       (filter #(and (.isFile %)
+                     (str/ends-with? (.getName %) ".clj")
+                     (not= "index.clj" (.getName %))))
+       (sort-by #(.getName %))))
+
+(defn- read-ns-form
+  "Reads the first form from a file, expected to be an ns form."
+  [file]
+  (with-open [rdr (java.io.PushbackReader. (io/reader file))]
+    (edn/read rdr)))
+
+(defn- extract-title
+  "Extracts :clay {:title ...} from ns form metadata, or derives from filename."
+  [file ns-form]
+  (let [ns-meta (when (and (sequential? ns-form)
+                           (>= (count ns-form) 2)
+                           (= 'ns (first ns-form)))
+                  (let [second-elem (nth ns-form 2 nil)]
+                    (when (map? second-elem) second-elem)))]
+    (or (get-in ns-meta [:clay :title])
+        (-> (.getName file)
+            (str/replace #"\.clj$" "")
+            (str/replace "_" " ")
+            str/capitalize))))
+
+(defn- notebook-link
+  "Generates hiccup for a notebook link."
+  [file]
+  (let [ns-form (read-ns-form file)
+        title (extract-title file ns-form)
+        html-name (-> (.getName file)
+                      (str/replace #"\.clj$" ".html"))]
+    [:li [:a {:href html-name} title]]))
 
 (kind/hiccup
- [:ul
-  [:li [:a {:href "map_accessors.html"} "Map Accessor Benchmarks"]
-   " - Comparing map and record access patterns"]
-  [:li [:a {:href "not_empty.html"} "Not-Empty Predicate Benchmarks"]
-   " - Comparing (seq x) vs (not (empty? x)) across collection types"]])
+ (into [:ul]
+       (map notebook-link)
+       (notebook-files)))
 
 ;; ## Running Benchmarks
 ;;
