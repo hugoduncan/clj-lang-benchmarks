@@ -12,19 +12,19 @@
 
 ;; # Not-Empty Predicate Benchmarks
 
-;; ## Environment
-
-*clojure-version*
-
-(jvm/os-details)
-
 ;; Comparing performance of different approaches to check if a collection is
 ;; not empty.
 ;; Two common approaches:
 ;; - `(seq x)` - idiomatic Clojure, returns nil or first element as truthy value
 ;; - `(not (empty? x))` - explicit boolean check
 
-;;; Non-empty Collections
+;; ## Environment
+
+*clojure-version*
+
+(jvm/runtime-details)
+
+(jvm/os-details)
 
 ;; ## Non-empty Vector
 ;;
@@ -81,8 +81,6 @@
      :not-empty (not (empty? coll))})
    :domain-plan domain-plans/implementation-comparison))
 
-;;; Empty Collections
-
 ;; ## Empty Vector
 
 (let [v []]
@@ -132,22 +130,6 @@
     {:seq       (seq coll)
      :not-empty (not (empty? coll))})
    :domain-plan domain-plans/implementation-comparison))
-
-;;; Analysis
-
-;; ## Summary
-;;
-;; Both `(seq x)` and `(not (empty? x))` check emptiness, but they have different
-;; characteristics:
-;;
-;; **`(seq x)`**:
-;; - Returns nil for empty collections, or the seq of the collection
-;; - Idiomatic Clojure - used directly in conditionals
-;; - Single function call
-;;
-;; **`(not (empty? x))`**:
-;; - Returns a boolean
-;; - Two function calls: `empty?` then `not`
 
 (kind/hidden
  (bench/set-default-viewer! :print))
