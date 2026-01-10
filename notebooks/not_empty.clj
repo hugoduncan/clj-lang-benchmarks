@@ -5,7 +5,9 @@
    [criterium.domain :as domain]
    [criterium.domain-plans :as domain-plans]
    [criterium.jvm :as jvm]
-   [scicloj.kindly.v4.kind :as kind]))
+   [scicloj.kindly.v4.kind :as kind])
+  (:import
+   (java.util Collection)))
 
 (kind/hidden
  (bench/set-default-viewer! :kindly))
@@ -14,9 +16,11 @@
 
 ;; Comparing performance of different approaches to check if a collection is
 ;; not empty.
-;; Two common approaches:
+;; Three common approaches:
 ;; - `(seq x)` - idiomatic Clojure, returns nil or first element as truthy value
 ;; - `(not (empty? x))` - explicit boolean check
+;; - `(not (Collection/.isEmpty x))` - Java interop via Collection interface
+;;   (Vector, List, Set only; Maps and LazySeqs don't implement Collection)
 
 ;; ## Environment
 
@@ -34,8 +38,9 @@
   (domain/bench
    (domain/domain-expr
     [coll [v]]
-    {:seq       (seq coll)
-     :not-empty (not (empty? coll))})
+    {:seq         (seq coll)
+     :not-empty   (not (empty? coll))
+     :not-isEmpty (not (Collection/.isEmpty coll))})
    :domain-plan domain-plans/implementation-comparison))
 
 ;; ## Non-empty List
@@ -44,8 +49,9 @@
   (domain/bench
    (domain/domain-expr
     [coll [l]]
-    {:seq       (seq coll)
-     :not-empty (not (empty? coll))})
+    {:seq         (seq coll)
+     :not-empty   (not (empty? coll))
+     :not-isEmpty (not (Collection/.isEmpty coll))})
    :domain-plan domain-plans/implementation-comparison))
 
 ;; ## Non-empty Set
@@ -54,8 +60,9 @@
   (domain/bench
    (domain/domain-expr
     [coll [s]]
-    {:seq       (seq coll)
-     :not-empty (not (empty? coll))})
+    {:seq         (seq coll)
+     :not-empty   (not (empty? coll))
+     :not-isEmpty (not (Collection/.isEmpty coll))})
    :domain-plan domain-plans/implementation-comparison))
 
 ;; ## Non-empty Map
@@ -87,8 +94,9 @@
   (domain/bench
    (domain/domain-expr
     [coll [v]]
-    {:seq       (seq coll)
-     :not-empty (not (empty? coll))})
+    {:seq         (seq coll)
+     :not-empty   (not (empty? coll))
+     :not-isEmpty (not (Collection/.isEmpty coll))})
    :domain-plan domain-plans/implementation-comparison))
 
 ;; ## Empty List
@@ -97,8 +105,9 @@
   (domain/bench
    (domain/domain-expr
     [coll [l]]
-    {:seq       (seq coll)
-     :not-empty (not (empty? coll))})
+    {:seq         (seq coll)
+     :not-empty   (not (empty? coll))
+     :not-isEmpty (not (Collection/.isEmpty coll))})
    :domain-plan domain-plans/implementation-comparison))
 
 ;; ## Empty Set
@@ -107,8 +116,9 @@
   (domain/bench
    (domain/domain-expr
     [coll [s]]
-    {:seq       (seq coll)
-     :not-empty (not (empty? coll))})
+    {:seq         (seq coll)
+     :not-empty   (not (empty? coll))
+     :not-isEmpty (not (Collection/.isEmpty coll))})
    :domain-plan domain-plans/implementation-comparison))
 
 ;; ## Empty Map
