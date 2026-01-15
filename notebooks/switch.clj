@@ -40,49 +40,50 @@
 
 ;; ## Implementations
 ;;
-;; Each function matches on 8 long values 1 through 8.
+;; Each function matches on 8 keyword values `:a` through `:h`.
 
-(defn switch-case [^long x]
-  (case x 1 :a 2 :b 3 :c 4 :d 5 :e 6 :f 7 :g 8 :h nil))
+(defn switch-case [x]
+  (case x :a 1 :b 2 :c 3 :d 4 :e 5 :f 6 :g 7 :h 8 nil))
 
-(defn switch-cond [^long x]
+(defn switch-cond [x]
   (cond
-    (= x 1) :a
-    (= x 2) :b
-    (= x 3) :c
-    (= x 4) :d
-    (= x 5) :e
-    (= x 6) :f
-    (= x 7) :g
-    (= x 8) :h))
+    (= x :a) 1
+    (= x :b) 2
+    (= x :c) 3
+    (= x :d) 4
+    (= x :e) 5
+    (= x :f) 6
+    (= x :g) 7
+    (= x :h) 8))
 
-(defn switch-condp [^long x]
-  (condp = x 1 :a 2 :b 3 :c 4 :d 5 :e 6 :f 7 :g 8 :h nil))
+(defn switch-condp [x]
+  (condp = x :a 1 :b 2 :c 3 :d 4 :e 5 :f 6 :g 7 :h 8 nil))
 
-(defn switch-if [^long x]
-  (if (= x 1) :a
-      (if (= x 2) :b
-          (if (= x 3) :c
-              (if (= x 4) :d
-                  (if (= x 5) :e
-                      (if (= x 6) :f
-                          (if (= x 7) :g
-                              (if (= x 8) :h nil)))))))))
+(defn switch-if [x]
+  (if (= x :a) 1
+      (if (= x :b) 2
+          (if (= x :c) 3
+              (if (= x :d) 4
+                  (if (= x :e) 5
+                      (if (= x :f) 6
+                          (if (= x :g) 7
+                              (if (= x :h) 8 nil)))))))))
 
 ;; ## Benchmarks
 ;;
-;; Testing each approach across lookup values 1-8 (matching clauses) and 0
-;; (missing). `case` should show constant time while others show increasing
-;; time for later positions.
+;; Testing each approach across clause positions 0-7 (matching) and 8 (missing).
+;; The numeric index is used to look up the keyword from a vector, providing
+;; indirection so `case` uses its hash-based dispatch on the keyword value.
 
-(domain/bench
- (domain/domain-expr
-  [lookup-val [1 2 3 4 5 6 7 8 0]]
-  {:case  (switch-case lookup-val)
-   :cond  (switch-cond lookup-val)
-   :condp (switch-condp lookup-val)
-   :if    (switch-if lookup-val)})
- :domain-plan domain-plans/implementation-comparison)
+(let [lookup-keys [:a :b :c :d :e :f :g :h :missing]]
+  (domain/bench
+   (domain/domain-expr
+    [idx [0 1 2 3 4 5 6 7 8]]
+    {:case  (switch-case (lookup-keys idx))
+     :cond  (switch-cond (lookup-keys idx))
+     :condp (switch-condp (lookup-keys idx))
+     :if    (switch-if (lookup-keys idx))})
+   :domain-plan domain-plans/implementation-comparison))
 
 (kind/hidden
  (bench/set-default-viewer! :print))
