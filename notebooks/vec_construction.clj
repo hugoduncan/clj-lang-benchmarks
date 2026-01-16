@@ -46,7 +46,7 @@
  (domain/domain-expr
   [n [1 2 4 8 16 32]]
   {:vec (vec (doall (range n)))})
- :bench-options {:metric-ids [:elapsed-time :thread-allocation]}
+ :bench-options {:metric-ids [:elapsed-time-only :thread-allocation]}
  :domain-plan domain-plans/complexity-analysis)
 
 ;; ## Tree Range Benchmarks (32-10240 elements)
@@ -58,25 +58,8 @@
  (domain/domain-expr
   [n [32 64 128 256 512 1024 2048 4096 10240]]
   {:vec (vec (doall (range n)))})
- :bench-options {:metric-ids [:elapsed-time :thread-allocation]}
+ :bench-options {:metric-ids [:elapsed-time-only :thread-allocation]}
  :domain-plan domain-plans/complexity-analysis)
-
-;; ## Analysis
-;;
-;; Key observations to look for:
-;;
-;; - **Linear scaling in small range**: Construction time should scale linearly
-;;   with size for array-based vectors.
-;;
-;; - **Transition overhead at 32**: The first tree-based size (64) may show
-;;   increased per-element cost due to trie node allocation.
-;;
-;; - **Allocation patterns**: Thread allocation metrics reveal memory pressure
-;;   differences between array and tree representations.
-;;
-;; - **Logarithmic factors in large range**: Tree construction adds O(log32 n)
-;;   depth traversal, though this is typically dominated by the O(n) element
-;;   copying.
 
 (kind/hidden
  (bench/set-default-viewer! :print))
