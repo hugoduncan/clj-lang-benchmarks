@@ -15,20 +15,13 @@
 ;; Measuring `(vec realized-seq)` performance across collection sizes to analyze
 ;; Clojure's PersistentVector implementation characteristics.
 
-;; ## Vec Internals
-;;
-;; Clojure's PersistentVector uses two different internal representations:
-;;
-;; - **Array-based (≤32 elements)**: Small vectors store elements directly in a
-;;   Java array. Construction is O(n) with minimal overhead.
-;;
-;; - **Tree-based (>32 elements)**: Larger vectors use a 32-way branching trie
-;;   (HAMT). The tree depth grows logarithmically: depth 1 holds up to 1024
-;;   elements, depth 2 up to 32768, etc.
-;;
-;; The transition at 32 elements is a key inflection point where allocation
-;; patterns and construction costs change.
+;; 1. [Environment](#environment)
+;; 2. [Up to 32 elements](#up-to-32)
+;; 3. [32 to 128 elements](#up-to-128)
+;; 4. [More than 128 elements](#more-than-28)
 
+^:kindly/hide-code
+(kind/hiccup [:a {:id "environment"}])
 ;; ## Environment
 
 *clojure-version*
@@ -37,26 +30,35 @@
 
 (jvm/os-details)
 
-;; ## Small Range Benchmarks (1-32 elements)
-;;
-;; These sizes fit in the array-based representation. We expect linear scaling
-;; with low per-element overhead.
+^:kindly/hide-code
+(kind/hiccup [:a {:id "up-to-32"}])
+;; ## Up to 32 elements
 
 (domain/bench
  (domain/domain-expr
-  [n [1 2 4 8 16 32]]
+  [n [2 4 8 16 32]]
   {:vec (vec (doall (range n)))})
  :bench-options {:metric-ids [:elapsed-time-only :thread-allocation]}
  :domain-plan domain-plans/complexity-analysis)
 
-;; ## Tree Range Benchmarks (32-10240 elements)
-;;
-;; These sizes require tree-based storage. Construction involves building the
-;; trie structure, which adds overhead compared to the array-based path.
+^:kindly/hide-code
+(kind/hiccup [:a {:id "up-to-128"}])
+;; ## 33-128 elements
 
 (domain/bench
  (domain/domain-expr
-  [n [32 64 128 256 512 1024 2048 4096 10240]]
+  [n [33 48 64 96 128]]
+  {:vec (vec (doall (range n)))})
+ :bench-options {:metric-ids [:elapsed-time-only :thread-allocation]}
+ :domain-plan domain-plans/complexity-analysis)
+
+^:kindly/hide-code
+(kind/hiccup [:a {:id "more-than-128"}])
+;; ## More than 128 elements
+
+(domain/bench
+ (domain/domain-expr
+  [n [129 256 512 1024 2048]]
   {:vec (vec (doall (range n)))})
  :bench-options {:metric-ids [:elapsed-time-only :thread-allocation]}
  :domain-plan domain-plans/complexity-analysis)
