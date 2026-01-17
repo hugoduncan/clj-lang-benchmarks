@@ -1,18 +1,42 @@
-# clj-lang-benchmarks Project Conventions
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Purpose
 
 Benchmarking Clojure implementations using criterium, with results published as Clay notebooks.
 
+## Common Commands
+
+```bash
+# Start REPL with warnings enabled
+clj -M:dev
+
+# Start nREPL (for editor integration)
+clj -M:nrepl
+
+# Build notebooks to docs/
+clj -T:build notebooks
+
+# Publish to gh-pages branch (builds + pushes)
+clj -T:build publish
+
+# Check formatting
+cljfmt check src dev notebooks build.clj
+
+# Lint
+clj-kondo --lint src dev notebooks build.clj
+```
+
 ## Clojure Style
 
-- Enable `*warn-on-reflection*` and `*unchecked-math* :boxed` when developing
+- Enable `*warn-on-reflection*` and `*unchecked-math* :boxed` when developing (auto-enabled in `:dev` alias)
 - Type hint where necessary to avoid reflection
 - Run benchmarks with criterium's `bench` or `quick-bench`
 
 ## Benchmark Structure
 
-Each benchmark should be a Clay notebook in `notebooks/` that:
+Each benchmark is a Clay notebook in `notebooks/` that:
 
 1. Defines the code being benchmarked
 2. Explains what is being measured and why
@@ -23,6 +47,7 @@ Example structure:
 
 ```clojure
 (ns notebooks.example-benchmark
+  {:clay {:title "My Benchmark Title"}}
   (:require [criterium.core :as criterium]))
 
 ;; ## What we're benchmarking
@@ -43,15 +68,12 @@ Example structure:
 ## Clay Notebook Conventions
 
 - Notebooks live in `notebooks/` with single-segment namespaces (e.g., `index`, `map-accessors`)
-- Index notebook (`notebooks/index.clj`) links to all benchmarks
-- Build with `clj -T:build notebooks`
+- Use `:clay {:title "..."}` in ns metadata for display title
+- Index notebook (`notebooks/index.clj`) auto-discovers and links to all benchmarks
 - Output goes to `docs/` for GitHub Pages (gitignored)
-- Publishing deploys to `gh-pages` branch via GitHub Actions or `clj -T:build publish`
 
-## Code Quality
+## Architecture Notes
 
-Pre-commit hook runs:
-- cljfmt check
-- clj-kondo lint
-
-Run `clj -M:dev` for a REPL with warnings enabled.
+- `build.clj` dynamically discovers notebooks via `notebook-files` function
+- The `:build` alias includes JVM options for criterium blackhole optimization
+- GitHub Actions runs check (lint/format) and publish workflows on push to master

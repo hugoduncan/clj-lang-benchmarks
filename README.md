@@ -1,62 +1,17 @@
 # clj-lang-benchmarks
 
-Clojure benchmarking project using [criterium](https://github.com/hugoduncan/criterium) for accurate performance measurements. Results are presented as [Clay](https://scicloj.github.io/clay/) notebooks published via GitHub Pages.
+Clojure performance benchmarks using [criterium](https://github.com/hugoduncan/criterium). Results are published as interactive notebooks.
 
-## Project Structure
+## View Results
 
-```
-├── notebooks/         Clay benchmark notebooks
-├── dev/user.clj       Development namespace
-├── build.clj          Build tasks
-├── clay.edn           Clay configuration
-└── docs/              Generated HTML output (gitignored)
-```
+**https://hugoduncan.github.io/clj-lang-benchmarks/**
 
-## Running Benchmarks
+## Available Benchmarks
 
-Start a REPL with the dev alias:
+- **Case/Cond/Condp Benchmarks** - Comparing performance of value matching approaches in Clojure
 
-```bash
-clj -M:dev
-```
+- **Map Accessor Benchmarks** - Comparing performance of different map and record access patterns (keyword lookup, destructuring, field access)
 
-Reflection warnings and boxed math warnings are enabled by default in the dev namespace.
+- **Not-Empty Predicate Benchmarks** - Comparing `(seq x)` vs `(not (empty? x))` for checking if collections are non-empty
 
-For an nREPL server:
-
-```bash
-clj -M:nrepl
-```
-
-## Building Notebooks
-
-Build all notebooks to `docs/`:
-
-```bash
-clj -T:build notebooks
-```
-
-## Publishing
-
-There are two publishing methods, both deploying to the `gh-pages` branch:
-
-### Automatic (GitHub Actions)
-
-Pushing to `master` triggers the GitHub Actions workflow which builds
-notebooks and deploys to GitHub Pages automatically.
-
-### Manual
-
-The `publish` task builds notebooks locally and pushes to `gh-pages`:
-
-```bash
-clj -T:build publish
-```
-
-This uses git subtree to push `docs/` content to the `gh-pages` branch
-without committing to `master`.
-
-## Viewing Results
-
-Published benchmarks are available at:
-https://hugoduncan.github.io/clj-lang-benchmarks/
+- **Vec Construction Benchmarks** - Measuring `(vec realized-seq)` performance across collection sizes
