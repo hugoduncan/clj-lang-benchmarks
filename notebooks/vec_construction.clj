@@ -37,26 +37,26 @@
 
 (jvm/os-details)
 
-;; ## Small Range Benchmarks (1-32 elements)
+;; ## Small Range Benchmarks (1-128 elements)
 ;;
 ;; These sizes fit in the array-based representation. We expect linear scaling
 ;; with low per-element overhead.
 
 (domain/bench
  (domain/domain-expr
-  [n [1 2 4 8 16 32]]
+  [n [1 2 4 8 16 32 64 128]]
   {:vec (vec (doall (range n)))})
  :bench-options {:metric-ids [:elapsed-time-only :thread-allocation]}
  :domain-plan domain-plans/complexity-analysis)
 
-;; ## Tree Range Benchmarks (32-10240 elements)
+;; ## Tree Range Benchmarks (256-1024 elements)
 ;;
 ;; These sizes require tree-based storage. Construction involves building the
 ;; trie structure, which adds overhead compared to the array-based path.
 
 (domain/bench
  (domain/domain-expr
-  [n [32 64 128 256 512 1024 2048 4096 10240]]
+  [n [256 512 1024]]
   {:vec (vec (doall (range n)))})
  :bench-options {:metric-ids [:elapsed-time-only :thread-allocation]}
  :domain-plan domain-plans/complexity-analysis)
