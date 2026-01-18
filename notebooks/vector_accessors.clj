@@ -46,5 +46,24 @@
    :direct-nth   (.nth ^clojure.lang.Indexed test-vec idx)})
  :domain-plan domain-plans/implementation-comparison)
 
+;; ## Access with Default Value
+;;
+;; When accessing indices that might be out of bounds, providing a default
+;; avoids exceptions. The direct `.valAt` call uses IPersistentVector's
+;; two-argument form.
+
+(def default :not-found)
+
+(domain/bench
+ (domain/domain-expr
+  [test-vec [v]
+   idx [i]
+   dflt [default]]
+  {:invoke      (test-vec idx dflt)
+   :get         (get test-vec idx dflt)
+   :nth         (nth test-vec idx dflt)
+   :direct-valAt (.valAt ^clojure.lang.IPersistentVector test-vec idx dflt)})
+ :domain-plan domain-plans/implementation-comparison)
+
 (kind/hidden
  (bench/set-default-viewer! :print))
