@@ -40,10 +40,10 @@
  (domain/domain-expr
   [test-vec [v]
    idx [i]]
-  {:invoke       (test-vec idx)
-   :get          (get test-vec idx)
-   :nth          (nth test-vec idx)
-   :direct-nth   (.nth ^clojure.lang.Indexed test-vec idx)})
+  {:invoke     (test-vec idx)
+   :get        (get test-vec idx)
+   :nth        (nth test-vec idx)
+   :direct-nth (.nth ^clojure.lang.Indexed test-vec idx)})
  :domain-plan domain-plans/implementation-comparison)
 
 ;; ## Access with Default Value
@@ -59,9 +59,8 @@
   [test-vec [v]
    idx [i]
    dflt [default]]
-  {:invoke      (test-vec idx dflt)
-   :get         (get test-vec idx dflt)
-   :nth         (nth test-vec idx dflt)
+  {:get          (get test-vec idx dflt)
+   :nth          (nth test-vec idx dflt)
    :direct-valAt (.valAt ^clojure.lang.IPersistentVector test-vec idx dflt)})
  :domain-plan domain-plans/implementation-comparison)
 
