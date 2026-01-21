@@ -2,7 +2,7 @@
 
  :deps {org.clojure/clojure {:mvn/version "1.12.4"}
         io.github.hugoduncan/criterium
-        {:git/sha   "46d8cad83a2e3ef1810eb12cb2f692d3323f8db0"
+        {:git/sha   "a83e6f5e47bad400b85796e5443a1fea7d72ef13"
          :deps/root "projects/criterium"}
         org.scicloj/clay    {:mvn/version "2-beta22"}}
 
