@@ -2,6 +2,7 @@
   {:clay {:title "Case/Cond/Condp Benchmarks"}}
   (:require
    [criterium.bench :as bench]
+   [criterium.collect-plan.config :as collect-plan-config]
    [criterium.domain :as domain]
    [criterium.domain-plans :as domain-plans]
    [criterium.jvm :as jvm]
@@ -111,7 +112,10 @@
      :condp  (switch-condp (lookup-keys idx))
      :if     (switch-if (lookup-keys idx))
      :if-2   (switch-if-2 (lookup-keys idx))})
-   :bench-options {:collect-plan :one-shot}
+   :bench-options {:collect-plan
+                   (collect-plan-config/collect-plan-config
+                    :one-shot
+                    {:num-warmup-samples 1})}
    :domain-plan domain-plans/implementation-comparison))
 
 ;; ### Varied Warmup (Realistic Branch Distribution)
