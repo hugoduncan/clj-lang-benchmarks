@@ -1,3 +1,6 @@
 .cpcache/
 target/
 docs/
+
+# Track clj-kondo hooks (override global gitignore)
+!.clj-kondo/imports/
