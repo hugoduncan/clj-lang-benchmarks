@@ -2,6 +2,7 @@
   {:clay {:title "Case/Cond/Condp Benchmarks"}}
   (:require
    [criterium.bench :as bench]
+   [criterium.collect-plan.config :as collect-plan-config]
    [criterium.domain :as domain]
    [criterium.domain-plans :as domain-plans]
    [criterium.jvm :as jvm]
@@ -96,6 +97,11 @@
 ;; The numeric index is used to look up the keyword from a vector, providing
 ;; indirection so `case` uses its hash-based dispatch on the keyword value.
 
+;; ### One-Shot (Cold Performance)
+;;
+;; Measures cold performance without JIT warmup, useful for code that runs
+;; infrequently (e.g., startup paths, error handlers, rarely-taken branches).
+
 (let [lookup-keys [:a :b :c :d :e :f :g :h :missing]]
   (domain/bench
    (domain/domain-expr
@@ -106,6 +112,54 @@
      :condp  (switch-condp (lookup-keys idx))
      :if     (switch-if (lookup-keys idx))
      :if-2   (switch-if-2 (lookup-keys idx))})
+   :bench-options {:collect-plan
+                   (collect-plan-config/collect-plan-config
+                    :one-shot
+                    {:num-warmup-samples 1})}
+   :domain-plan domain-plans/implementation-comparison))
+
+;; ### Varied Warmup (Realistic Branch Distribution)
+;;
+;; Uses uniform random index selection during warmup to prevent JIT
+;; over-specialization on specific branch paths. Produces results more
+;; representative of real-world usage where different branches are taken.
+
+(let [lookup-keys [:a :b :c :d :e :f :g :h :missing]]
+  (domain/bench
+   (domain/domain-expr
+    [idx [0 1 2 3 4 5 6 7 8]]
+    {:case   (switch-case (lookup-keys idx))
+     :cond   (switch-cond (lookup-keys idx))
+     :cond-2 (switch-cond-2 (lookup-keys idx))
+     :condp  (switch-condp (lookup-keys idx))
+     :if     (switch-if (lookup-keys idx))
+     :if-2   (switch-if-2 (lookup-keys idx))}
+    {:warmup-args-fn (fn [] [{:idx (lookup-keys (rand-int 9))}])})
+   :bench-options {:collect-plan
+                   (collect-plan-config/collect-plan-config
+                    :with-jit-warmup
+                    {:num-warmup-samples 250000})}
+   :domain-plan domain-plans/implementation-comparison))
+
+;; ### Standard Benchmark
+;;
+;; Fixed index values with standard JIT warmup. Useful for comparison but may
+;; show optimistic results due to JIT specialization on specific branch paths.
+
+(let [lookup-keys [:a :b :c :d :e :f :g :h :missing]]
+  (domain/bench
+   (domain/domain-expr
+    [idx [0 1 2 3 4 5 6 7 8]]
+    {:case   (switch-case (lookup-keys idx))
+     :cond   (switch-cond (lookup-keys idx))
+     :cond-2 (switch-cond-2 (lookup-keys idx))
+     :condp  (switch-condp (lookup-keys idx))
+     :if     (switch-if (lookup-keys idx))
+     :if-2   (switch-if-2 (lookup-keys idx))})
+   :bench-options {:collect-plan
+                   (collect-plan-config/collect-plan-config
+                    :with-jit-warmup
+                    {:num-warmup-samples 250000})}
    :domain-plan domain-plans/implementation-comparison))
 
 (kind/hidden

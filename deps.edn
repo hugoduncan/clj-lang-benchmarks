@@ -2,7 +2,7 @@
 
  :deps {org.clojure/clojure {:mvn/version "1.12.4"}
         io.github.hugoduncan/criterium
-        {:git/sha   "44a8e4fd34cd036cfff9b4ef831e9338546f16ba"
+        {:git/sha   "753d89d6c58d79f71f8917e442df33a4763a3ed6"
          :deps/root "projects/criterium"}
         org.scicloj/clay    {:mvn/version "2-beta22"}}
 
@@ -14,7 +14,7 @@
   :build {:extra-deps  {io.github.clojure/tools.build {:mvn/version "0.10.6"}
                         org.scicloj/clay              {:mvn/version "2-beta22"}
                         io.github.hugoduncan/criterium
-                        {:git/sha   "44a8e4fd34cd036cfff9b4ef831e9338546f16ba"
+                        {:git/sha   "753d89d6c58d79f71f8917e442df33a4763a3ed6"
                          :deps/root "projects/criterium"}}
           :jvm-opts    ["-XX:+UnlockExperimentalVMOptions"
                         "-XX:CompileCommand=blackhole,criterium.blackhole.Blackhole::consume"]

@@ -1,0 +1,3 @@
+{:hooks
+ {:analyze-call
+  {criterium.domain/domain-expr clj-kondo.criterium.hooks/domain-expr}}}
