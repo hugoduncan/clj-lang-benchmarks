@@ -120,9 +120,9 @@
 
 ;; ### Varied Warmup (Realistic Branch Distribution)
 ;;
-;; Uses random index selection during warmup to prevent JIT over-specialization
-;; on specific branch paths. Produces results more representative of real-world
-;; usage where different branches are taken.
+;; Uses uniform random index selection during warmup to prevent JIT
+;; over-specialization on specific branch paths. Produces results more
+;; representative of real-world usage where different branches are taken.
 
 (let [lookup-keys [:a :b :c :d :e :f :g :h :missing]]
   (domain/bench
@@ -135,6 +135,10 @@
      :if     (switch-if (lookup-keys idx))
      :if-2   (switch-if-2 (lookup-keys idx))}
     {:warmup-args-fn (fn [] [{:idx (lookup-keys (rand-int 9))}])})
+   :bench-options {:collect-plan
+                   (collect-plan-config/collect-plan-config
+                    :with-jit-warmup
+                    {:num-warmup-samples 250000})}
    :domain-plan domain-plans/implementation-comparison))
 
 ;; ### Standard Benchmark
@@ -152,6 +156,10 @@
      :condp  (switch-condp (lookup-keys idx))
      :if     (switch-if (lookup-keys idx))
      :if-2   (switch-if-2 (lookup-keys idx))})
+   :bench-options {:collect-plan
+                   (collect-plan-config/collect-plan-config
+                    :with-jit-warmup
+                    {:num-warmup-samples 250000})}
    :domain-plan domain-plans/implementation-comparison))
 
 (kind/hidden
